@@ -45,7 +45,10 @@ class AbstractProcessor {
                 return false
             }
         }
-        return true
+        if (annotations.size() == 0)
+            return false
+        else
+            return true
     }
 
     /**

@@ -67,7 +67,7 @@ class ProcessorTest {
     void testParseAnnotations()
     {
         //EMPTY STRING
-        assertTrue("Empty string should return all acceptable annotations", processor.parseAnnotations("") == NLTKProcessor.ACCEPTABLE )
+        assertTrue("Empty string should return all acceptable annotations", processor.parseAnnotations("") == processor.ACCEPTABLE.toList() )
 
         //ONE WORD
         List expected = ["f.penn"]
