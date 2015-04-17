@@ -35,29 +35,29 @@ class ProcessorTest {
     {
         //PASSING ********
         //ONE
-        def pass1 = ["f.penn"]
-        assertTrue(processor.validAnnotations(pass1, processor.ACCEPTABLE))
+        def pass1 = ["f.ptb"]
+        assertTrue(processor.validAnnotations(pass1))
 
         //FEW
-        def pass2 = ["f.penn", "f.fn", "f.ptb"]
-        assertTrue(processor.validAnnotations(pass2, processor.ACCEPTABLE))
-
-        //ALL
-        def pass3 = ["f.penn", "f.fn", "f.fntok", "f.ptb", "f.ptbtok"]
-        assertTrue(processor.validAnnotations(pass3, processor.ACCEPTABLE))
+        def pass2 = ["f.fn", "f.fntok"]
+        assertTrue(processor.validAnnotations(pass2))
 
         //FAILING ********
+        //Not Disjoint
+        def pass3 = ["f.penn", "f.fn", "f.fntok", "f.ptb", "f.ptbtok"]
+        assertFalse(processor.validAnnotations(pass3))
+
         //NONE
         def fail1 = [] as ArrayList<String>
-        assertFalse(processor.validAnnotations(fail1, processor.ACCEPTABLE))
+        assertFalse(processor.validAnnotations(fail1))
 
         //ALL
         def fail2 = ["f.c5", "f.biber", "f.ne", "f.mpqa"]
-        assertFalse(processor.validAnnotations(fail2, processor.ACCEPTABLE))
+        assertFalse(processor.validAnnotations(fail2))
 
         //ONE WRONG IN LIST OF RIGHT
         def fail3 = ["f.penn", "f.fn", "f.biber", "f.fntok"]
-        assertFalse(processor.validAnnotations(fail3, processor.ACCEPTABLE))
+        assertFalse(processor.validAnnotations(fail3))
     }
 
     @Test
@@ -67,7 +67,7 @@ class ProcessorTest {
     void testParseAnnotations()
     {
         //EMPTY STRING
-        assertTrue("Empty string should return all acceptable annotations", processor.parseAnnotations("") == processor.ACCEPTABLE.toList() )
+        assertTrue("Empty string should return all acceptable annotations", processor.parseAnnotations("") == processor.Acceptable.toList() )
 
         //ONE WORD
         List expected = ["f.penn"]
@@ -87,13 +87,13 @@ class ProcessorTest {
 
     @Test
     void testProcess() {
-        Response response = processor.process("penn", "MASC3-0202")
+        Response response = processor.process("fn", "MASC3-0202")
         assertTrue response.entity, response.status == 200
     }
 
     @Test
     void testInvalidDocId() {
-        Response response = processor.process("penn", "Invalid ID")
+        Response response = processor.process("fn", "Invalid ID")
         assertTrue response.entity, response.status == 500
         assertTrue "Wrong error message returned", response.entity == MESSAGES.INVALID_ID
     }
